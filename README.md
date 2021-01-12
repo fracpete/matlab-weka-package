@@ -35,9 +35,9 @@ MatlabMatSaver options:
 	The input file
 -o <the output file>
 	The output file
--entry-name-header <name>
+-entry-name-meta <name>
 	The entry name to use for the header
-	(default: header)
+	(default: meta)
 -entry-name-data <name>
 	The entry name to use for the data
 	(default: data)
