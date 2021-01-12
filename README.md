@@ -13,6 +13,18 @@ The loader:
 The saver:
 
 ```
+MatlabMatSaver options:
+
+-i <the input file>
+	The input file
+-o <the output file>
+	The output file
+-entry-name-header <name>
+	The entry name to use for the header
+	(default: header)
+-entry-name-data <name>
+	The entry name to use for the data
+	(default: data)
 ```
 
 
