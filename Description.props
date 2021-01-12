@@ -5,10 +5,10 @@
 PackageName=matlab
 
 # Version (required)
-Version=2021.1.12
+Version=2021.1.13
 
 #Date (year-month-day)
-Date=2021-01-12
+Date=2021-01-13
 
 # Title (required)
 Title=Matlab .mat files
@@ -29,7 +29,7 @@ License=GPL 3.0
 Description=Loader/saver for reading binary Matlab .mat files (using the MFL library - https://github.com/HebiRobotics/MFL).
 
 # Package URL for obtaining the package archive (required)
-PackageURL=https://github.com/fracpete/matlab-weka-package/releases/download/v2021.1.12/matlab-2021.1.12.zip
+PackageURL=https://github.com/fracpete/matlab-weka-package/releases/download/v2021.1.13/matlab-2021.1.13.zip
 
 # URL for further information
 URL=https://github.com/fracpete/matlab-weka-package
