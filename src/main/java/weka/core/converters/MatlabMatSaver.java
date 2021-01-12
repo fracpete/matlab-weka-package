@@ -55,10 +55,10 @@ public class MatlabMatSaver
   private static final long serialVersionUID = -7226404765213522043L;
 
   /** the default entry name (header). */
-  public final static String DEFAULT_ENTRY_NAME_HEADER = "header";
+  public final static String DEFAULT_ENTRY_NAME_META = "meta";
 
   /** the name of the entry to store the header under. */
-  protected String m_EntryNameHeader = DEFAULT_ENTRY_NAME_HEADER;
+  protected String m_EntryNameMeta = DEFAULT_ENTRY_NAME_META;
 
   /** the default entry name (data). */
   public final static String DEFAULT_ENTRY_NAME_DATA = "data";
@@ -80,7 +80,11 @@ public class MatlabMatSaver
    *         explorer/experimenter gui
    */
   public String globalInfo() {
-    return "Writes binary Matlab .mat files.";
+    return "Writes binary Matlab .mat files.\n"
+      + "The header information is stored as well in three rows:\n"
+      + "- attribute names\n"
+      + "- attribute types\n"
+      + "- attribute format (eg to determine date format or nominal values)";
   }
 
   /**
@@ -88,8 +92,8 @@ public class MatlabMatSaver
    *
    * @param value	the name
    */
-  public void setEntryNameHeader(String value) {
-    m_EntryNameHeader = value;
+  public void setEntryNameMeta(String value) {
+    m_EntryNameMeta = value;
   }
 
   /**
@@ -97,8 +101,8 @@ public class MatlabMatSaver
    *
    * @return		the name
    */
-  public String getEntryNameHeader() {
-    return m_EntryNameHeader;
+  public String getEntryNameMeta() {
+    return m_EntryNameMeta;
   }
 
   /**
@@ -107,7 +111,7 @@ public class MatlabMatSaver
    * @return tip text for this property suitable for displaying in the
    *         explorer/experimenter gui
    */
-  public String entryNameHeaderTipText() {
+  public String entryNameMetaTipText() {
     return "The entry name to use for the header.";
   }
 
@@ -151,8 +155,8 @@ public class MatlabMatSaver
       result.add(enm.nextElement());
 
     result.addElement(new Option("\tThe entry name to use for the header\n"
-      + "\t(default: " + DEFAULT_ENTRY_NAME_HEADER + ")",
-      "entry-name-header", 1, "-entry-name-header <name>"));
+      + "\t(default: " + DEFAULT_ENTRY_NAME_META + ")",
+      "entry-name-meta", 1, "-entry-name-meta <name>"));
 
     result.addElement(new Option("\tThe entry name to use for the data\n"
       + "\t(default: " + DEFAULT_ENTRY_NAME_DATA + ")",
@@ -171,11 +175,11 @@ public class MatlabMatSaver
   public void setOptions(String[] options) throws Exception {
     String tmp;
 
-    tmp = Utils.getOption("entry-name-header", options);
+    tmp = Utils.getOption("entry-name-meta", options);
     if (!tmp.isEmpty())
-      setEntryNameHeader(tmp);
+      setEntryNameMeta(tmp);
     else
-      setEntryNameHeader(DEFAULT_ENTRY_NAME_DATA);
+      setEntryNameMeta(DEFAULT_ENTRY_NAME_META);
 
     tmp = Utils.getOption("entry-name-data", options);
     if (!tmp.isEmpty())
@@ -198,8 +202,8 @@ public class MatlabMatSaver
 
     result = new ArrayList<String>(Arrays.asList(super.getOptions()));
 
-    result.add("-entry-name-header");
-    result.add(getEntryNameHeader());
+    result.add("-entry-name-meta");
+    result.add(getEntryNameMeta());
 
     result.add("-entry-name-data");
     result.add(getEntryNameData());
@@ -273,13 +277,17 @@ public class MatlabMatSaver
     Cell	cell;
     int		i;
 
-    cell = Mat5.newCell(2, data.numAttributes());
+    cell = Mat5.newCell(3, data.numAttributes() + 1);
+    cell.set(0, 0, Mat5.newString("name"));
+    cell.set(1, 0, Mat5.newString("type"));
+    cell.set(2, 0, Mat5.newString("format"));
     for (i = 0; i < data.numAttributes(); i++) {
-      cell.set(0, i, Mat5.newString(data.attribute(i).name()));
-      cell.set(1, i, Mat5.newString(Attribute.typeToStringShort(data.attribute(i).type())));
+      cell.set(0, i + 1, Mat5.newString(data.attribute(i).name()));
+      cell.set(1, i + 1, Mat5.newString(Attribute.typeToStringShort(data.attribute(i).type())));
+      cell.set(2, i + 1, Mat5.newString(data.attribute(i).toString()));
     }
 
-    mat5.addArray(m_EntryNameHeader, cell);
+    mat5.addArray(m_EntryNameMeta, cell);
   }
 
   /**
@@ -309,7 +317,7 @@ public class MatlabMatSaver
       }
     }
 
-    mat5.addArray(m_EntryNameHeader, cell);
+    mat5.addArray(m_EntryNameData, cell);
   }
 
   /**
@@ -328,6 +336,9 @@ public class MatlabMatSaver
 
     if (getRetrieval() == INCREMENTAL)
       throw new IOException("Batch and incremental saving cannot be mixed.");
+
+    if (m_EntryNameMeta.equals(m_EntryNameData))
+      throw new IOException("Header and data name are the same: " + m_EntryNameMeta);
 
     setRetrieval(BATCH);
     setWriteMode(WRITE);
