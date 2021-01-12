@@ -14,9 +14,9 @@ Preparation
   version, e.g.:
 
   ```
-  Version=2020.11.29
-  Date=2020-11-29
-  PackageURL=https://github.com/fracpete/common-csv-weka-package/releases/download/v2020.11.29/common-csv-2020.11.29.zip
+  Version=2021.1.13
+  Date=2021-01-13
+  PackageURL=https://github.com/fracpete/matlab-weka-package/releases/download/v2021.1.13/matlab-2021.1.13.zip
   ```
 
 * Commit/push all changes
@@ -25,13 +25,13 @@ Preparation
 Weka package
 ------------
 
-* Run the following command to generate the package archive for version `2020.11.29`:
+* Run the following command to generate the package archive for version `2021.1.13`:
 
   ```
-  ant -f build_package.xml -Dpackage=common-csv-2020.11.29 clean make_package
+  ant -f build_package.xml -Dpackage=matlab-2021.1.13 clean make_package
   ```
 
-* Create a release tag on github (v2020.11.29)
+* Create a release tag on github (v2021.1.13)
 * add release notes
 * upload package archive from `dist`
 
