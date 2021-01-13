@@ -26,6 +26,14 @@ Options:
 	(default: 25)
 ```
 
+**Note**
+
+The loader outputs all the entries contained
+in the .mat file on `stderr`. So check the
+console output for them, if you are unsure
+about what the name of the matrix is that 
+you are trying to load.
+
 The saver:
 
 ```
